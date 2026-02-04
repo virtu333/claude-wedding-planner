@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* Wedding Color Palette */
+:root {
+  --color-primary: #29564F;         /* Dark Green - primary buttons, completed status */
+  --color-primary-light: #637569;   /* Eucalyptus - grid headers, groom assignee */
+  --color-accent-bride: #AF7A76;    /* Cedar Rose - bride assignee */
+  --color-accent-warm: #9E4C26;     /* Paprika - in-progress status */
+  --color-warning: #9A3F3C;         /* Terracotta - high priority, due soon */
+  --color-danger: #861930;          /* Burgundy - overdue, errors, delete */
+}
