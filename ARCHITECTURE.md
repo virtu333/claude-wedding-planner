@@ -219,17 +219,21 @@ src/
 │   ├── ErrorBoundary.tsx
 │   ├── ConfirmModal.tsx
 │   ├── PasswordGate.tsx
+│   ├── BottomSheet.tsx       # Mobile bottom sheet container
+│   ├── FilterModal.tsx       # Mobile filter controls
 │   ├── views/               # View mode components
 │   │   ├── GridView.tsx
 │   │   ├── CalendarContainer.tsx
 │   │   ├── MonthlyView.tsx
 │   │   ├── WeeklyView.tsx
 │   │   ├── DailyView.tsx
+│   │   ├── MobileListView.tsx # Mobile timeframe accordion
 │   │   └── UnscheduledSidebar.tsx
 │   └── calendar/
 │       └── CalendarNavigation.tsx
 ├── hooks/
-│   └── useBoard.tsx          # Context provider + hook
+│   ├── useBoard.tsx          # Context provider + hook
+│   └── useIsMobile.ts        # Viewport detection (<768px)
 ├── lib/
 │   ├── types.ts              # TypeScript types
 │   ├── constants.ts          # Status/assignee colors, labels
@@ -287,6 +291,32 @@ Utility-first styling. Key patterns:
 - Validation before save
 - Clear error messages in UI
 - Prevent data loss (confirm before delete)
+
+## Mobile Architecture
+
+### Viewport Detection
+- `useIsMobile` hook uses `useSyncExternalStore` with `matchMedia`
+- Breakpoint: 768px (matches Tailwind's `md:`)
+- Reactively updates when viewport crosses threshold
+
+### View Modes
+- ViewMode type: `'grid' | 'monthly' | 'weekly' | 'daily' | 'list'`
+- Auto-switches to `'list'` on mobile (first load, no saved preference)
+- Preference persisted to localStorage (`wedding-planner-view-mode`)
+- Manual override available via view toggle
+
+### Mobile Components
+- **MobileListView**: Timeframe accordions with task lists
+- **BottomSheet**: Slide-up container with swipe-to-close
+- **FilterModal**: Bottom sheet filter controls
+- **Header**: Responsive layout (`isMobile` prop)
+- **TaskDetailPanel**: `variant` prop (`'panel'` | `'sheet'`)
+
+### Touch Optimizations
+- 56px minimum row height (Apple HIG touch target)
+- Large status dot tap targets (40x40px)
+- Swipe gestures for bottom sheet close
+- iOS safe area padding (`.safe-bottom` class)
 
 ## Performance Considerations
 

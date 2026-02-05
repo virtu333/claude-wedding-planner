@@ -7,8 +7,8 @@ export type TaskAssignee = 'unassigned' | 'bride' | 'groom' | 'both' | 'other';
 // Task priority type
 export type TaskPriority = 'normal' | 'high';
 
-// View mode type for switching between grid and calendar views
-export type ViewMode = 'grid' | 'monthly' | 'weekly' | 'daily';
+// View mode type for switching between grid, calendar, and list views
+export type ViewMode = 'grid' | 'monthly' | 'weekly' | 'daily' | 'list';
 
 // Checklist item within a task
 export interface ChecklistItem {
@@ -69,4 +69,5 @@ export interface FilterState {
   status: TaskStatus | 'all';
   assignee: TaskAssignee | 'all';
   hideCompleted: boolean;
+  searchQuery: string;
 }

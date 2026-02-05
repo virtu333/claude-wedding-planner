@@ -296,7 +296,7 @@ export function BoardProvider({ children }: { children: ReactNode }) {
     (id: string, updates: Partial<Task>) => {
       if (!state.board) return;
 
-      let finalUpdates = { ...updates };
+      const finalUpdates = { ...updates };
       let updatedTimeframes = state.board.timeframes;
 
       // Auto-sync timeframe when dueDate changes

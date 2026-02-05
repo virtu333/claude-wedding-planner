@@ -43,18 +43,22 @@ src/
 │   ├── DroppableCell.tsx      # DnD drop target wrapper for grid cells
 │   ├── ErrorBoundary.tsx      # React error boundary with recovery UI
 │   ├── ConfirmModal.tsx       # Reusable confirmation dialog component
-│   └── PasswordGate.tsx       # Simple password protection wrapper
+│   ├── PasswordGate.tsx       # Simple password protection wrapper
+│   ├── BottomSheet.tsx        # Mobile bottom sheet container (swipe-to-close)
+│   ├── FilterModal.tsx        # Mobile filter controls (bottom sheet style)
 │   ├── views/                 # View mode components
 │   │   ├── GridView.tsx       # Original category × timeframe grid
 │   │   ├── CalendarContainer.tsx # Layout wrapper for calendar views
 │   │   ├── MonthlyView.tsx    # Month calendar with task dots
 │   │   ├── WeeklyView.tsx     # 7-day columns, category rows
 │   │   ├── DailyView.tsx      # Single day task list by category
+│   │   ├── MobileListView.tsx # Timeframe accordion list for mobile
 │   │   └── UnscheduledSidebar.tsx # Tasks without dueDate
 │   └── calendar/
 │       └── CalendarNavigation.tsx # Prev/next/today buttons
 ├── hooks/
-│   └── useBoard.tsx           # BoardProvider context + useBoard hook
+│   ├── useBoard.tsx           # BoardProvider context + useBoard hook
+│   └── useIsMobile.ts         # Viewport detection hook (<768px)
 ├── lib/
 │   ├── types.ts               # TypeScript types (includes ViewMode)
 │   ├── constants.ts           # Status/assignee colors and labels

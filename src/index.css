@@ -9,3 +9,15 @@
   --color-warning: #9A3F3C;         /* Terracotta - high priority, due soon */
   --color-danger: #861930;          /* Burgundy - overdue, errors, delete */
 }
+
+/* Safe area insets for iOS devices (notch, home indicator) */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Prevent pull-to-refresh on mobile when scrolling inside bottom sheet */
+.overscroll-contain {
+  overscroll-behavior: contain;
+}

@@ -159,7 +159,59 @@
 - [ ] Undo/redo
 - [x] Export to CSV (completed in v0.4.0)
 - [ ] Dark mode
-- [ ] Mobile responsive design
+- [x] **Mobile List View** (2026-02-04)
+  - Touch-optimized list view with timeframe accordions
+  - Auto-switches to list view on mobile (<768px)
+  - Bottom sheet for task details on mobile
+  - Mobile-optimized header with filter modal
+  - New files: `MobileListView.tsx`, `BottomSheet.tsx`, `FilterModal.tsx`, `useIsMobile.ts`
+
+## Feature Ideas (Under Consideration)
+
+### Search & Quick Navigation
+- [x] **Search Bar** (2026-02-05) - Filter tasks by title and notes
+  - Desktop: Search input in Header between view toggle and filters
+  - Mobile: Search input at top of FilterModal
+  - Instant case-insensitive filtering as you type
+  - Clear (X) button to reset search; included in "Clear filters"
+- [ ] Command palette (⌘K) for quick task search and navigation
+- [ ] Keyboard shortcuts for common actions
+
+### Budget Tracking
+- [ ] Budget field on tasks (estimated/actual cost)
+- [ ] Budget summary by category
+- [ ] Spending dashboard with progress bars
+
+### Guest List & RSVP
+- [ ] Guest management module (name, party size, dietary restrictions)
+- [ ] RSVP status tracking (pending/yes/no/maybe)
+- [ ] Table/seating assignments
+- [ ] Guest count summary
+
+### Vendor Management
+- [ ] Vendor contacts linked to categories (name, phone, email)
+- [ ] Contract dates and payment schedules
+- [ ] Vendor notes and reviews
+
+### Day-of Timeline
+- [ ] Wedding day schedule view (separate from planning timeframes)
+- [ ] Time-based entries ("3:00 PM - Ceremony begins")
+- [ ] Printable timeline for day-of coordinator
+
+### Templates & Import
+- [ ] Pre-built task templates for common wedding styles
+- [ ] Import tasks from CSV/Excel
+- [ ] Export to PDF
+
+### Collaboration
+- [ ] Activity feed (who changed what, when)
+- [ ] Comments on tasks
+- [ ] @mentions for assignees
+
+### Notifications
+- [ ] Email reminders for upcoming due dates
+- [ ] Browser push notifications
+- [ ] Daily/weekly digest emails
 
 ## Future Considerations (Post-v1 Optimization)
 

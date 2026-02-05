@@ -4,6 +4,16 @@ All notable changes to the Wedding Planner app will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Search Bar** - Find tasks by title or notes
+  - Desktop: Search input in Header between view toggle and status filter
+  - Mobile: Search input at top of FilterModal (bottom sheet)
+  - Instant case-insensitive filtering as you type
+  - Clear (X) button clears search only; "Clear filters" clears all
+  - Task count updates to show filtered results
+  - Works across all views (Grid, Month, Week, Day, List)
+  - New `searchQuery` field added to FilterState type
+
 ### Fixed
 - **WeeklyView Sticky Header** - Day headers (SUN, MON, etc.) now stay pinned when scrolling
   - Added `sticky top-0 z-20` to thead, matching GridView behavior
@@ -34,6 +44,32 @@ All notable changes to the Wedding Planner app will be documented in this file.
   - Affected files: `TaskDetailPanel.tsx`, `Board.tsx`
 
 ### Added
+- **Mobile List View** - Touch-optimized view for mobile devices
+  - New `'list'` view mode added to ViewMode type (5th option alongside grid/month/week/day)
+  - Auto-switches to list view on mobile (<768px) on first load if no preference saved
+  - Timeframe-based accordion navigation with task counts
+  - Touch-friendly 56px row height with large tap targets
+  - Tap status dot to cycle status, tap row to open task details
+  - View preference persisted to localStorage
+  - New files: `src/components/views/MobileListView.tsx`, `src/hooks/useIsMobile.ts`
+- **Bottom Sheet Component** - Mobile-native task detail presentation
+  - Slides up from bottom on mobile devices
+  - Swipe-down gesture to close (100px threshold)
+  - Drag handle for visual affordance
+  - 90vh max height with iOS safe area support
+  - New file: `src/components/BottomSheet.tsx`
+- **Mobile Filter Modal** - Touch-optimized filter controls
+  - Bottom sheet presentation for filter options
+  - Full-width dropdowns with larger touch targets
+  - Clear All + Apply buttons
+  - New file: `src/components/FilterModal.tsx`
+- **Responsive Header** - Mobile-optimized header layout
+  - Compact 2-row layout on mobile: title/sync/add on row 1, view toggle/filters on row 2
+  - Filter button opens FilterModal on mobile
+  - All 5 view modes available as icon-only buttons
+- **iOS Safe Area Support** - CSS utilities for notch/home indicator
+  - `.safe-bottom` class for bottom padding
+  - `.overscroll-contain` to prevent pull-to-refresh conflicts
 - **CLI `migrate-dates` Command** - Backfills date metadata to existing timeframes
   - Run `node scripts/firebase-tasks.mjs migrate-dates --dry-run` to preview
   - Run `node scripts/firebase-tasks.mjs migrate-dates` to apply
@@ -46,6 +82,13 @@ All notable changes to the Wedding Planner app will be documented in this file.
   - New utility file: `src/lib/timeframeUtils.ts` with date-to-timeframe mapping
 
 ### Changed
+- **TaskDetailPanel** - Now supports `variant` prop for mobile presentation
+  - `variant='panel'` (default): Desktop side panel
+  - `variant='sheet'`: Mobile bottom sheet via BottomSheet component
+  - Shorter notes textarea (h-32 vs h-48) in sheet mode
+- **Header** - Added `isMobile` prop for responsive layout switching
+- **Board** - Orchestrates mobile view selection and panel variant
+- **ViewMode type** - Extended to include `'list'` option
 - **CLI init command** - Now includes `startDate`/`endDate` on all timeframes
 - **Timeframe type** - Added optional `startDate?: string` and `endDate?: string` fields
 - `skills/weddingplannerskill.md` - Replaced with generic template (personal data removed)
