@@ -4,16 +4,6 @@ All notable changes to the Wedding Planner app will be documented in this file.
 
 ## [Unreleased]
 
-### Added
-- **Search Bar** - Find tasks by title or notes
-  - Desktop: Search input in Header between view toggle and status filter
-  - Mobile: Search input at top of FilterModal (bottom sheet)
-  - Instant case-insensitive filtering as you type
-  - Clear (X) button clears search only; "Clear filters" clears all
-  - Task count updates to show filtered results
-  - Works across all views (Grid, Month, Week, Day, List)
-  - New `searchQuery` field added to FilterState type
-
 ### Fixed
 - **WeeklyView Sticky Header** - Day headers (SUN, MON, etc.) now stay pinned when scrolling
   - Added `sticky top-0 z-20` to thead, matching GridView behavior
@@ -44,6 +34,12 @@ All notable changes to the Wedding Planner app will be documented in this file.
   - Affected files: `TaskDetailPanel.tsx`, `Board.tsx`
 
 ### Added
+- **Search Bar** - Find tasks by title or notes
+  - Desktop: Search input in Header between view toggle and status filter
+  - Mobile: Search input at top of FilterModal
+  - Instant case-insensitive filtering as you type
+  - Clear (X) button clears search only; "Clear filters" clears all
+  - Works across all views (Grid, Month, Week, Day, List)
 - **Mobile List View** - Touch-optimized view for mobile devices
   - New `'list'` view mode added to ViewMode type (5th option alongside grid/month/week/day)
   - Auto-switches to list view on mobile (<768px) on first load if no preference saved
