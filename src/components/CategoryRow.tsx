@@ -206,10 +206,10 @@ export function CategoryRow({
 
           {/* Empty cell for hidden columns indicator */}
           {hiddenColumnCount > 0 && (
-            <td className="border border-yellow-200 bg-yellow-50 min-w-[120px]"></td>
+            <td className="border border-yellow-200 bg-yellow-50 min-w-[120px] max-w-[320px]"></td>
           )}
           {/* Empty cell for the add timeframe column */}
-          <td className="border border-gray-200 bg-gray-50 min-w-[50px]"></td>
+          <td className="border border-gray-200 bg-gray-50 min-w-[50px] max-w-[320px]"></td>
 
           {/* Delete Confirmation Modal (rendered in portal via fixed positioning) */}
           <ConfirmModal

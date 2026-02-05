@@ -4,7 +4,11 @@ All notable changes to the Wedding Planner app will be documented in this file.
 
 ## [Unreleased]
 
-*No changes yet*
+### Fixed
+- **Grid Column Sizing** - Timeframe columns no longer stretch excessively on wide screens
+  - Added `max-w-[320px]` to timeframe headers, droppable cells, and placeholder cells
+  - Columns grow between 180px and 320px, preventing wasted space with few timeframes
+  - Affected files: `TimeframeHeader.tsx`, `DroppableCell.tsx`, `CategoryRow.tsx`
 
 ## [0.7.0] - 2026-02-05
 

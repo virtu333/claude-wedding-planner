@@ -77,7 +77,7 @@ export function TimeframeHeader({
 
   return (
     <th
-      className="bg-[#DFE5E2] border border-[#637569]/30 px-4 py-3 text-left text-sm font-semibold text-[#29564F] min-w-[180px] relative"
+      className="bg-[#DFE5E2] border border-[#637569]/30 px-4 py-3 text-left text-sm font-semibold text-[#29564F] min-w-[180px] max-w-[320px] relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

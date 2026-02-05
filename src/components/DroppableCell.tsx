@@ -19,7 +19,7 @@ export function DroppableCell({ categoryId, timeframeId, children }: DroppableCe
     <td
       ref={setNodeRef}
       className={cn(
-        'border border-gray-200 px-3 py-2 align-top min-w-[180px] transition-colors',
+        'border border-gray-200 px-3 py-2 align-top min-w-[180px] max-w-[320px] transition-colors',
         isOver ? 'bg-[#29564F]/10 border-[#29564F]/50' : 'bg-white'
       )}
     >
