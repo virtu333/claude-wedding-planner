@@ -4,6 +4,10 @@ All notable changes to the Wedding Planner app will be documented in this file.
 
 ## [Unreleased]
 
+*No changes yet*
+
+## [0.7.0] - 2026-02-05
+
 ### Fixed
 - **WeeklyView Sticky Header** - Day headers (SUN, MON, etc.) now stay pinned when scrolling
   - Added `sticky top-0 z-20` to thead, matching GridView behavior
