@@ -1,4 +1,4 @@
-import { X, Search } from 'lucide-react';
+import { X } from 'lucide-react';
 import { STATUS_LABELS, ASSIGNEE_LABELS } from '../lib/constants';
 import type { FilterState, TaskStatus, TaskAssignee } from '../lib/types';
 
@@ -50,38 +50,6 @@ export function FilterModal({
             >
               <X size={20} />
             </button>
-          </div>
-
-          {/* Search input */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Search
-            </label>
-            <div className="relative">
-              <Search
-                size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-              />
-              <input
-                type="text"
-                value={filters.searchQuery}
-                onChange={(e) =>
-                  onFiltersChange({ ...filters, searchQuery: e.target.value })
-                }
-                placeholder="Search title or notes..."
-                className="w-full border border-gray-300 rounded-lg pl-10 pr-10 py-3 text-base focus:ring-2 focus:ring-[#29564F] focus:border-[#29564F]"
-              />
-              {filters.searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => onFiltersChange({ ...filters, searchQuery: '' })}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 active:text-gray-600"
-                  aria-label="Clear search"
-                >
-                  <X size={18} />
-                </button>
-              )}
-            </div>
           </div>
 
           {/* Status filter */}

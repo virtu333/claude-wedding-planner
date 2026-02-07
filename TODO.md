@@ -151,7 +151,7 @@
   - All existing filters (status, assignee, hideCompleted) work across views
   - Intelligent due dates: tasks spread across timeframes, hard deadline overrides
 - [ ] **Bulk Task Import** - Import tasks from JSON file (see `scripts/bulk-add-tasks.js` for context)
-- [ ] Search tasks by name
+- [x] Search tasks by name
 - [ ] Column resize (drag to resize)
 - [ ] Row resize
 - [ ] Task ordering within cells
@@ -177,10 +177,16 @@
 - [ ] Command palette (⌘K) for quick task search and navigation
 - [ ] Keyboard shortcuts for common actions
 
-### Budget Tracking
-- [ ] Budget field on tasks (estimated/actual cost)
-- [ ] Budget summary by category
-- [ ] Spending dashboard with progress bars
+### Budget Module — [Detailed Plan](./BUDGET_MODULE_PLAN.md)
+**Status:** Implementation plan complete (2026-02-05)
+
+Standalone budget management module with scenario-based budgeting:
+- [ ] Phase 1: Navigation infrastructure (sidebar, routing)
+- [ ] Phase 2: Budget data layer (Firestore, useBudget hook)
+- [ ] Phase 3: Budget page core UI (categories, items)
+- [ ] Phase 4: Scenarios (create, duplicate, switch, delete)
+- [ ] Phase 5: Scenario comparison view
+- [ ] Phase 6: Polish & edge cases
 
 ### Guest List & RSVP
 - [ ] Guest management module (name, party size, dietary restrictions)
@@ -216,18 +222,20 @@
 ## Future Considerations (Post-v1 Optimization)
 
 ### Performance: Full Board Re-renders (LOW PRIORITY - No Action Needed)
-**Status:** Investigated 2026-02-02 - Current architecture is appropriate for scale
+**Status:** Investigated 2026-02-02, context memoized 2026-02-06
 
 The single-document approach causes full React re-renders on any change. Investigation found:
 - Expected scale: 20-50 tasks, 17 categories, 14 timeframes
 - Re-render time: ~20-40ms (imperceptible)
-- Current optimization: `useMemo` on derived values in Board.tsx
+- Current optimizations:
+  - `useMemo` on derived values in Board.tsx
+  - `useMemo` on `contextValue` in BoardProvider (added 2026-02-06)
 - Not memoized: TaskCard, CategoryRow (intentional - render cost < memo cost at this scale)
 
 **Monitor if:** Users report lag, render phase >50ms in DevTools, or tasks exceed 100.
 
 **Potential optimizations if needed:**
-- Refactor GridView to pass only category-relevant tasks (not entire array)
+- Split context into separate state/actions contexts (actions are stable, avoid re-renders for action-only consumers)
 - React.memo on CategoryRow with custom comparator
 - Partial Firebase updates (currently batched via 300ms debounce)
 
@@ -574,3 +582,13 @@ Use this section to track what was done in each Claude Code session:
   - Maps timeframe names to specific dates (e.g., "Feb 1-7" → Feb 4)
 - [x] Verified npm run build passes
 - [x] Local testing complete
+
+### Session 17 - 2026-02-06
+- [x] Comprehensive code review (33 files, 0 critical, 3 high, 13 medium, 11 low)
+- [x] Fix: Extract `getNextStatus()` utility into `src/lib/utils.ts`
+  - Replaced duplicated status cycle logic in Board.tsx, GridView.tsx, CalendarContainer.tsx
+- [x] Fix: Move BottomSheet `setIsVisible(true)` from render body into `useEffect`
+  - Eliminates fragile setState-during-render pattern
+- [x] Fix: Memoize `contextValue` in BoardProvider with `useMemo`
+  - Prevents unnecessary re-renders of all useBoard() consumers
+- [x] Verified npm run build passes

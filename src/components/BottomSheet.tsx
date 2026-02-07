@@ -17,12 +17,12 @@ export function BottomSheet({ isOpen, onClose, title, children, footer }: Bottom
   const [startY, setStartY] = useState<number | null>(null);
   const [currentY, setCurrentY] = useState(0);
 
-  // Update visibility when isOpen changes
-  // When opening: show immediately
-  // When closing: keep visible until animation completes
-  if (isOpen && !isVisible) {
-    setIsVisible(true);
-  }
+  // When opening: show immediately so the enter animation plays
+  useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true);
+    }
+  }, [isOpen]);
 
   // Handle body scroll lock
   useEffect(() => {

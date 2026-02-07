@@ -117,7 +117,7 @@ export function Header({
           </div>
 
           {/* Row 2: View toggle + Filter button */}
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center justify-between gap-2 mb-3">
             {/* View mode toggle - compact */}
             <div className="flex border border-gray-300 rounded-md overflow-hidden flex-1">
               {VIEW_MODES.map(({ mode, icon: Icon }) => (
@@ -153,6 +153,31 @@ export function Header({
                 <span className="w-2 h-2 rounded-full bg-[#29564F]" />
               )}
             </button>
+          </div>
+
+          {/* Row 3: Search bar */}
+          <div className="relative">
+            <Search
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+            />
+            <input
+              type="text"
+              value={filters.searchQuery}
+              onChange={(e) => onFiltersChange({ ...filters, searchQuery: e.target.value })}
+              placeholder="Search tasks..."
+              aria-label="Search tasks"
+              className="w-full border border-gray-300 rounded-md pl-10 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#29564F] focus:border-[#29564F]"
+            />
+            {filters.searchQuery && (
+              <button
+                onClick={() => onFiltersChange({ ...filters, searchQuery: '' })}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 active:text-gray-600"
+                aria-label="Clear search"
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
         </header>
 

@@ -15,7 +15,8 @@ import { TimeframeHeader } from '../TimeframeHeader';
 import { AddTimeframeButton } from '../AddTimeframeButton';
 import { AddCategoryButton } from '../AddCategoryButton';
 import { TaskCard } from '../TaskCard';
-import type { Board, Category, Timeframe, Task, TaskStatus } from '../../lib/types';
+import { getNextStatus } from '../../lib/utils';
+import type { Board, Category, Timeframe, Task } from '../../lib/types';
 
 interface GridViewProps {
   board: Board;
@@ -135,11 +136,7 @@ export function GridView({
       const task = board.tasks.find((t) => t.id === taskId);
       if (!task) return;
 
-      const statusOrder: TaskStatus[] = ['not_started', 'in_progress', 'completed'];
-      const currentIndex = statusOrder.indexOf(task.status);
-      const nextStatus = statusOrder[(currentIndex + 1) % 3];
-
-      onUpdateTask(taskId, { status: nextStatus });
+      onUpdateTask(taskId, { status: getNextStatus(task.status) });
     },
     [board, onUpdateTask]
   );

@@ -4,7 +4,8 @@ import { MonthlyView } from './MonthlyView';
 import { WeeklyView } from './WeeklyView';
 import { DailyView } from './DailyView';
 import { getUnscheduledTasks } from '../../lib/calendarUtils';
-import type { Task, ViewMode, TaskStatus, Category } from '../../lib/types';
+import { getNextStatus } from '../../lib/utils';
+import type { Task, ViewMode, Category } from '../../lib/types';
 
 interface CalendarContainerProps {
   viewMode: Exclude<ViewMode, 'grid'>;
@@ -33,11 +34,7 @@ export function CalendarContainer({
     const task = tasks.find((t) => t.id === taskId);
     if (!task) return;
 
-    const statusOrder: TaskStatus[] = ['not_started', 'in_progress', 'completed'];
-    const currentIndex = statusOrder.indexOf(task.status);
-    const nextStatus = statusOrder[(currentIndex + 1) % 3];
-
-    onUpdateTask(taskId, { status: nextStatus });
+    onUpdateTask(taskId, { status: getNextStatus(task.status) });
   };
 
   // Render the appropriate view

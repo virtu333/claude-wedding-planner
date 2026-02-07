@@ -4,7 +4,21 @@ All notable changes to the Wedding Planner app will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- **Extract `getNextStatus()` utility** - Status cycle logic consolidated into single function
+  - Was copy-pasted in `Board.tsx`, `GridView.tsx`, and `CalendarContainer.tsx`
+  - Now imported from `src/lib/utils.ts` in all three locations
+  - Unused `TaskStatus` imports removed from each file
+- **Memoize BoardProvider context value** - `useMemo` wraps `contextValue` in `useBoard.tsx`
+  - Prevents unnecessary re-renders of all `useBoard()` consumers on every state change
+
 ### Fixed
+- **Mobile Search Bar Hidden** - Search bar now persistent in mobile header instead of buried in Filter modal
+  - Added always-visible search input as 3rd row in mobile header
+  - Removed duplicate search from FilterModal (status/assignee/hideCompleted remain)
+  - "Clear All" in FilterModal still clears search query
+- **BottomSheet render-time setState** - Moved `setIsVisible(true)` from render body into `useEffect`
+  - Eliminates fragile pattern that risked infinite render loops
 - **Grid Column Sizing** - Timeframe columns no longer stretch excessively on wide screens
   - Added `max-w-[320px]` to timeframe headers, droppable cells, and placeholder cells
   - Columns grow between 180px and 320px, preventing wasted space with few timeframes

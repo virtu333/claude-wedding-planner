@@ -4,6 +4,16 @@ import { twMerge } from 'tailwind-merge';
 import { DUE_SOON_DAYS, STATUS_LABELS, ASSIGNEE_LABELS, PRIORITY_LABELS, STATUS_COLORS, ASSIGNEE_COLORS } from './constants';
 import type { Board, TaskStatus, TaskAssignee, TaskPriority } from './types';
 
+const STATUS_ORDER: TaskStatus[] = ['not_started', 'in_progress', 'completed'];
+
+/**
+ * Get the next status in the cycle: not_started → in_progress → completed → not_started
+ */
+export function getNextStatus(currentStatus: TaskStatus): TaskStatus {
+  const currentIndex = STATUS_ORDER.indexOf(currentStatus);
+  return STATUS_ORDER[(currentIndex + 1) % STATUS_ORDER.length];
+}
+
 /**
  * Generate a unique ID using UUID v4
  */

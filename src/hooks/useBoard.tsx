@@ -4,6 +4,7 @@ import {
   useReducer,
   useEffect,
   useCallback,
+  useMemo,
   useRef,
   type ReactNode,
 } from 'react';
@@ -542,25 +543,45 @@ export function BoardProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'SET_SELECTED_TASK', payload: taskId });
   }, []);
 
-  // Context value
-  const contextValue: BoardContextType = {
-    ...state,
-    addTask,
-    updateTask,
-    deleteTask,
-    moveTask,
-    addCategory,
-    updateCategory,
-    deleteCategory,
-    addTimeframe,
-    updateTimeframe,
-    deleteTimeframe,
-    reorderTimeframes,
-    addChecklistItem,
-    updateChecklistItem,
-    deleteChecklistItem,
-    selectTask,
-  };
+  // Context value - memoized to avoid unnecessary re-renders of all consumers
+  const contextValue: BoardContextType = useMemo(
+    () => ({
+      ...state,
+      addTask,
+      updateTask,
+      deleteTask,
+      moveTask,
+      addCategory,
+      updateCategory,
+      deleteCategory,
+      addTimeframe,
+      updateTimeframe,
+      deleteTimeframe,
+      reorderTimeframes,
+      addChecklistItem,
+      updateChecklistItem,
+      deleteChecklistItem,
+      selectTask,
+    }),
+    [
+      state,
+      addTask,
+      updateTask,
+      deleteTask,
+      moveTask,
+      addCategory,
+      updateCategory,
+      deleteCategory,
+      addTimeframe,
+      updateTimeframe,
+      deleteTimeframe,
+      reorderTimeframes,
+      addChecklistItem,
+      updateChecklistItem,
+      deleteChecklistItem,
+      selectTask,
+    ]
+  );
 
   return <BoardContext.Provider value={contextValue}>{children}</BoardContext.Provider>;
 }

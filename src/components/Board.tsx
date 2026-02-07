@@ -7,7 +7,8 @@ import { CalendarContainer } from './views/CalendarContainer';
 import { MobileListView } from './views/MobileListView';
 import { TaskDetailPanel } from './TaskDetailPanel';
 import { AddTaskModal } from './AddTaskModal';
-import type { FilterState, ViewMode, TaskStatus } from '../lib/types';
+import { getNextStatus } from '../lib/utils';
+import type { FilterState, ViewMode } from '../lib/types';
 
 // Storage key for view preference
 const VIEW_PREFERENCE_KEY = 'wedding-planner-view-mode';
@@ -117,11 +118,7 @@ export function Board() {
       const task = board?.tasks.find((t) => t.id === taskId);
       if (!task) return;
 
-      const statusOrder: TaskStatus[] = ['not_started', 'in_progress', 'completed'];
-      const currentIndex = statusOrder.indexOf(task.status);
-      const nextStatus = statusOrder[(currentIndex + 1) % 3];
-
-      updateTask(taskId, { status: nextStatus });
+      updateTask(taskId, { status: getNextStatus(task.status) });
     },
     [board, updateTask]
   );
