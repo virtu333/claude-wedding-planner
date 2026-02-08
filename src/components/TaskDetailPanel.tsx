@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { X, ChevronRight, ChevronDown, Trash2 } from 'lucide-react';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { X, ChevronRight, ChevronDown, Trash2, Check } from 'lucide-react';
 import { useBoard } from '../hooks/useBoard';
 import { ConfirmModal } from './ConfirmModal';
 import { BottomSheet } from './BottomSheet';
@@ -65,6 +65,17 @@ export function TaskDetailPanel({ taskId, onClose, variant = 'panel' }: TaskDeta
 
   // Delete confirmation state
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
+  // Completion animation state
+  const [completing, setCompleting] = useState(false);
+  const completingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup completion timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (completingTimeoutRef.current) clearTimeout(completingTimeoutRef.current);
+    };
+  }, []);
 
   // Handle ESC key to close (only for panel variant - sheet handles its own)
   useEffect(() => {
@@ -182,9 +193,22 @@ export function TaskDetailPanel({ taskId, onClose, variant = 'panel' }: TaskDeta
     },
   ];
 
+  // Completion overlay
+  const completionOverlay = completing && (
+    <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80 animate-[fadeIn_0.3s_ease-out]">
+      <div className="flex flex-col items-center gap-2 animate-[scaleIn_0.4s_ease-out]">
+        <div className="w-16 h-16 rounded-full bg-[#29564F] flex items-center justify-center">
+          <Check size={32} className="text-white" strokeWidth={3} />
+        </div>
+        <span className="text-lg font-semibold text-[#29564F]">Done!</span>
+      </div>
+    </div>
+  );
+
   // Shared content for both panel and sheet
   const content = (
-    <div className="p-4 space-y-5">
+    <div className="relative p-4 space-y-5">
+      {completionOverlay}
       {/* Title - editable */}
       <input
         type="text"
@@ -215,7 +239,24 @@ export function TaskDetailPanel({ taskId, onClose, variant = 'panel' }: TaskDeta
           {statusOptions.map((opt) => (
             <button
               key={opt.value}
-              onClick={() => updateTask(task.id, { status: opt.value })}
+              onClick={() => {
+                // Clicking a non-completed status while animation is playing: cancel it
+                if (completing && opt.value !== 'completed') {
+                  if (completingTimeoutRef.current) clearTimeout(completingTimeoutRef.current);
+                  completingTimeoutRef.current = null;
+                  setCompleting(false);
+                }
+
+                updateTask(task.id, { status: opt.value });
+
+                // Trigger completion animation when marking as completed (and not already completed)
+                if (opt.value === 'completed' && task.status !== 'completed') {
+                  setCompleting(true);
+                  completingTimeoutRef.current = setTimeout(() => {
+                    onClose();
+                  }, 800);
+                }
+              }}
               className={cn(
                 'px-3 py-1.5 text-xs rounded border transition-colors',
                 task.status === opt.value

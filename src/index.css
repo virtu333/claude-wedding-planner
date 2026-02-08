@@ -21,3 +21,14 @@
 .overscroll-contain {
   overscroll-behavior: contain;
 }
+
+/* Task completion animation keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
