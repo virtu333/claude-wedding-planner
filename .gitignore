@@ -50,6 +50,9 @@ check-export.json
 cli-board-export.json
 *-export.json
 
+# Planning docs (local only)
+*_PLAN.md
+
 # Issues/notes (if personal)
 issues/
 .claude/

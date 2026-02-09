@@ -277,9 +277,31 @@ export function BoardProvider({ children }: { children: ReactNode }) {
     (taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => {
       if (!state.board) return;
 
+      const finalData = { ...taskData };
+      let updatedTimeframes = state.board.timeframes;
+
+      // Auto-sync timeframe when dueDate is provided
+      if (finalData.dueDate) {
+        const matchingTimeframeId = findTimeframeForDate(
+          finalData.dueDate,
+          state.board.timeframes
+        );
+
+        if (matchingTimeframeId) {
+          finalData.timeframeId = matchingTimeframeId;
+        } else {
+          const newTimeframe = createTimeframeForDate(
+            finalData.dueDate,
+            state.board.timeframes
+          );
+          updatedTimeframes = [...state.board.timeframes, newTimeframe];
+          finalData.timeframeId = newTimeframe.id;
+        }
+      }
+
       const now = new Date();
       const newTask: Task = {
-        ...taskData,
+        ...finalData,
         id: generateId(),
         createdAt: now,
         updatedAt: now,
@@ -287,6 +309,7 @@ export function BoardProvider({ children }: { children: ReactNode }) {
 
       updateBoard({
         ...state.board,
+        timeframes: updatedTimeframes,
         tasks: [...state.board.tasks, newTask],
       });
     },

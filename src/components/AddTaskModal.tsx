@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { useBoard } from '../hooks/useBoard';
+import { findTimeframeForDate } from '../lib/timeframeUtils';
 import type { Category, Timeframe } from '../lib/types';
 
 interface AddTaskModalProps {
@@ -32,7 +33,7 @@ function AddTaskForm({
     priority: 'normal';
     categoryId: string;
     timeframeId: string;
-    dueDate: null;
+    dueDate: Date | null;
     checklist: never[];
   }) => void;
 }) {
@@ -40,11 +41,12 @@ function AddTaskForm({
 
   // Initialize form state with defaults
   const [title, setTitle] = useState('');
+  const [dueDate, setDueDate] = useState('');
   const [categoryId, setCategoryId] = useState(
     defaultCategoryId || sortedCategories[0]?.id || ''
   );
   const [timeframeId, setTimeframeId] = useState(
-    defaultTimeframeId || sortedTimeframes[0]?.id || ''
+    defaultTimeframeId || ''
   );
 
   // Focus input on mount
@@ -55,12 +57,29 @@ function AddTaskForm({
     return () => clearTimeout(timer);
   }, []);
 
+  // When date changes, auto-fill the timeframe dropdown
+  const handleDateChange = useCallback(
+    (value: string) => {
+      setDueDate(value);
+      if (value) {
+        const parsed = new Date(value + 'T00:00:00');
+        const matchId = findTimeframeForDate(parsed, sortedTimeframes);
+        if (matchId) {
+          setTimeframeId(matchId);
+        }
+      }
+    },
+    [sortedTimeframes]
+  );
+
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
 
       const trimmedTitle = title.trim();
-      if (!trimmedTitle || !categoryId || !timeframeId) return;
+      if (!trimmedTitle || !categoryId || (!timeframeId && !dueDate)) return;
+
+      const parsedDate = dueDate ? new Date(dueDate + 'T00:00:00') : null;
 
       addTask({
         title: trimmedTitle,
@@ -70,13 +89,13 @@ function AddTaskForm({
         priority: 'normal',
         categoryId,
         timeframeId,
-        dueDate: null,
+        dueDate: parsedDate,
         checklist: [],
       });
 
       onClose();
     },
-    [title, categoryId, timeframeId, addTask, onClose]
+    [title, categoryId, timeframeId, dueDate, addTask, onClose]
   );
 
   return (
@@ -101,8 +120,25 @@ function AddTaskForm({
         />
       </div>
 
+      {/* Due Date */}
+      <div className="mb-4">
+        <label
+          htmlFor="task-due-date"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Due Date
+        </label>
+        <input
+          id="task-due-date"
+          type="date"
+          value={dueDate}
+          onChange={(e) => handleDateChange(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#29564F] focus:border-[#29564F]"
+        />
+      </div>
+
       {/* Category + Timeframe */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-2 gap-4 mb-2">
         <div>
           <label
             htmlFor="task-category"
@@ -129,15 +165,16 @@ function AddTaskForm({
             htmlFor="task-timeframe"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Timeframe <span className="text-red-500">*</span>
+            Timeframe {!dueDate && <span className="text-red-500">*</span>}
           </label>
           <select
             id="task-timeframe"
             value={timeframeId}
             onChange={(e) => setTimeframeId(e.target.value)}
             className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#29564F] focus:border-[#29564F]"
-            required
+            required={!dueDate}
           >
+            <option value="">— Select —</option>
             {sortedTimeframes.map((t: Timeframe) => (
               <option key={t.id} value={t.id}>
                 {t.name}
@@ -146,6 +183,10 @@ function AddTaskForm({
           </select>
         </div>
       </div>
+      {!dueDate && !timeframeId && (
+        <p className="text-xs text-gray-500 mb-4">Pick a date or select a timeframe</p>
+      )}
+      {(dueDate || timeframeId) && <div className="mb-4" />}
 
       {/* Actions */}
       <div className="flex justify-end gap-3">

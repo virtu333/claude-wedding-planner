@@ -4,6 +4,9 @@ All notable changes to the Wedding Planner app will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Task completion animation** - Marking a task "Completed" in the detail panel shows a green checkmark overlay, then auto-closes the panel after 800ms. Changing status during the animation cancels the auto-close. Works in both desktop side panel and mobile bottom sheet.
+
 ### Changed
 - **Extract `getNextStatus()` utility** - Status cycle logic consolidated into single function
   - Was copy-pasted in `Board.tsx`, `GridView.tsx`, and `CalendarContainer.tsx`

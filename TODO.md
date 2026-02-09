@@ -169,9 +169,9 @@
 ## Feature Ideas (Under Consideration)
 
 ### Search & Quick Navigation
-- [x] **Search Bar** (2026-02-05) - Filter tasks by title and notes
+- [x] **Search Bar** (2026-02-05, mobile fix 2026-02-06) - Filter tasks by title and notes
   - Desktop: Search input in Header between view toggle and filters
-  - Mobile: Search input at top of FilterModal
+  - Mobile: Persistent search bar in header (moved from FilterModal for discoverability)
   - Instant case-insensitive filtering as you type
   - Clear (X) button to reset search; included in "Clear filters"
 - [ ] Command palette (⌘K) for quick task search and navigation
@@ -592,3 +592,11 @@ Use this section to track what was done in each Claude Code session:
 - [x] Fix: Memoize `contextValue` in BoardProvider with `useMemo`
   - Prevents unnecessary re-renders of all useBoard() consumers
 - [x] Verified npm run build passes
+
+### Session 18 - 2026-02-06
+- [x] Fix: Mobile search bar moved from FilterModal to persistent header row
+  - Search was buried behind "Filters" button — undiscoverable on mobile
+  - Added always-visible search input as 3rd row in mobile header
+  - Removed duplicate search from FilterModal (status/assignee/hideCompleted remain)
+  - "Clear All" in FilterModal still clears search query
+- [x] Deployed to Vercel
