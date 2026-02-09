@@ -556,7 +556,7 @@ const commands = {
     }
 
     // Update the appropriate field
-    const stringFields = ['title', 'notes'];
+    const stringFields = ['title', 'notes', 'dueDate'];
     const enumFields = ['status', 'assignee', 'priority'];
 
     if (stringFields.includes(field)) {

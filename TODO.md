@@ -600,3 +600,16 @@ Use this section to track what was done in each Claude Code session:
   - Removed duplicate search from FilterModal (status/assignee/hideCompleted remain)
   - "Clear All" in FilterModal still clears search query
 - [x] Deployed to Vercel
+
+### Session 19 - 2026-02-08
+- [x] Feat: Due date picker in Add Task modal
+  - Date auto-fills timeframe dropdown; timeframe optional when date is set
+  - `addTask` in useBoard auto-syncs timeframe from due date (matches `updateTask` behavior)
+  - Timeframe dropdown defaults to "— Select —" placeholder
+- [x] Verified build, committed, pushed, deployed to Vercel
+
+### Session 20 - 2026-02-08
+- [x] Added 17 new tasks: pre-wedding logistics, welcome bags, photo display/slideshow, printed goods, vendor check-ins, attire
+- [x] Updated 4 existing tasks (Fly to Bay Area → May 5, dessert pickup notes, speaker procurement notes, due dates)
+- [x] Added `dueDate` to `update-task` stringFields in `firebase-tasks.mjs`
+- [x] Set due dates on all 18 new/updated tasks so they appear in calendar views
