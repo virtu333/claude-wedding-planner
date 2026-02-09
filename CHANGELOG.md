@@ -5,7 +5,14 @@ All notable changes to the Wedding Planner app will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Weekly View peek columns** - Adds a dimmed previous Saturday and next Sunday column on each side of the week, enabling drag-and-drop across week boundaries. Peek columns show tasks at reduced opacity with full DnD support. Hidden on mobile.
 - **Task completion animation** - Marking a task "Completed" in the detail panel shows a green checkmark overlay, then auto-closes the panel after 800ms. Changing status during the animation cancels the auto-close. Works in both desktop side panel and mobile bottom sheet.
+- **Due date in Add Task modal** - New date picker field when creating tasks
+  - Selecting a date auto-fills the timeframe dropdown via `findTimeframeForDate`
+  - Timeframe is optional when a date is set; helper text: "Pick a date or select a timeframe"
+  - Timeframe dropdown defaults to "— Select —" instead of first option
+  - `addTask` in useBoard now auto-syncs timeframe from due date (creates new timeframe if no match)
+- **CLI: `update-task` supports `dueDate` field** - Can now set/change task due dates via `update-task "title" dueDate "YYYY-MM-DD"`
 
 ### Changed
 - **Extract `getNextStatus()` utility** - Status cycle logic consolidated into single function

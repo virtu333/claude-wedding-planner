@@ -19,10 +19,12 @@ import {
   getTasksForDate,
   isToday,
   isSameDay,
+  addDays,
   DAY_NAMES,
   formatDateId,
   parseDateId,
 } from '../../lib/calendarUtils';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import type { Task, Category } from '../../lib/types';
 
 interface WeeklyViewProps {
@@ -44,7 +46,22 @@ export function WeeklyView({
   onUpdateTask,
 }: WeeklyViewProps) {
   const weekDays = getWeekDays(currentDate);
+  const isMobile = useIsMobile();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  // Build 9-day array with peek columns (prev Saturday + next Sunday) on desktop
+  const displayDays = useMemo(() => {
+    if (isMobile) {
+      return weekDays.map((date) => ({ date, isPeek: false }));
+    }
+    const prevSaturday = addDays(weekDays[0], -1); // Saturday before this Sunday
+    const nextSunday = addDays(weekDays[6], 1);     // Sunday after this Saturday
+    return [
+      { date: prevSaturday, isPeek: true },
+      ...weekDays.map((date) => ({ date, isPeek: false })),
+      { date: nextSunday, isPeek: true },
+    ];
+  }, [weekDays, isMobile]);
 
   // Configure drag sensors (same as GridView)
   const sensors = useSensors(
@@ -55,10 +72,10 @@ export function WeeklyView({
     })
   );
 
-  // Get tasks for each day of the week
+  // Get tasks for each display day (includes peek days)
   const tasksByDay = useMemo(() => {
-    return weekDays.map((day) => getTasksForDate(tasks, day));
-  }, [weekDays, tasks]);
+    return displayDays.map(({ date }) => getTasksForDate(tasks, date));
+  }, [displayDays, tasks]);
 
   // Filter categories to only those with at least one task this week
   const categoriesWithTasks = useMemo(() => {
@@ -141,21 +158,22 @@ export function WeeklyView({
                 Category
               </th>
               {/* Day columns */}
-              {weekDays.map((day, index) => {
-                const today = isToday(day);
+              {displayDays.map(({ date: day, isPeek }, index) => {
+                const today = !isPeek && isToday(day);
                 return (
                   <th
                     key={index}
                     className={cn(
                       'px-2 py-3 text-center border-r border-[#637569]/30 last:border-r-0 min-w-[120px] bg-[#DFE5E2]',
-                      today && 'bg-[#D0DAD6]'
+                      today && 'bg-[#D0DAD6]',
+                      isPeek && 'text-gray-400 bg-[#DFE5E2]/60'
                     )}
                   >
-                    <div className="text-xs text-gray-500 uppercase">{DAY_NAMES[index]}</div>
+                    <div className="text-xs text-gray-500 uppercase">{DAY_NAMES[day.getDay()]}</div>
                     <div
                       className={cn(
                         'text-lg font-semibold mt-1',
-                        today ? 'text-[#29564F]' : 'text-gray-700'
+                        today ? 'text-[#29564F]' : isPeek ? 'text-gray-400' : 'text-gray-700'
                       )}
                     >
                       {day.getDate()}
@@ -172,7 +190,7 @@ export function WeeklyView({
           <tbody>
             {categoriesWithTasks.length === 0 ? (
               <tr>
-                <td colSpan={8} className="text-center py-12 text-gray-500">
+                <td colSpan={displayDays.length + 1} className="text-center py-12 text-gray-500">
                   No tasks scheduled this week.
                 </td>
               </tr>
@@ -185,17 +203,18 @@ export function WeeklyView({
                   </td>
 
                   {/* Day cells */}
-                  {weekDays.map((day, dayIndex) => {
+                  {displayDays.map(({ date: day, isPeek }, dayIndex) => {
                     const cellTasks = getTasksForCategoryAndDay(category.id, day);
-                    const today = isToday(day);
+                    const today = !isPeek && isToday(day);
 
                     return (
-                      <DroppableDayCell key={dayIndex} categoryId={category.id} date={day} isToday={today}>
+                      <DroppableDayCell key={dayIndex} categoryId={category.id} date={day} isToday={today} isPeek={isPeek}>
                         <div className="space-y-1">
                           {cellTasks.map((task) => (
                             <DraggableWeeklyTaskCard
                               key={task.id}
                               task={task}
+                              isPeek={isPeek}
                               onClick={() => onTaskSelect(task.id)}
                               onStatusCycle={() => onStatusCycle(task.id)}
                             />
@@ -228,10 +247,11 @@ interface DroppableDayCellProps {
   categoryId: string;
   date: Date;
   isToday: boolean;
+  isPeek: boolean;
   children: React.ReactNode;
 }
 
-function DroppableDayCell({ categoryId, date, isToday: today, children }: DroppableDayCellProps) {
+function DroppableDayCell({ categoryId, date, isToday: today, isPeek, children }: DroppableDayCellProps) {
   const { isOver, setNodeRef } = useDroppable({
     id: `${categoryId}:${formatDateId(date)}`,
   });
@@ -242,6 +262,7 @@ function DroppableDayCell({ categoryId, date, isToday: today, children }: Droppa
       className={cn(
         'p-2 border-r border-[#637569]/30 last:border-r-0 align-top min-h-[60px] transition-colors',
         today && 'bg-[#29564F]/5',
+        isPeek && 'bg-gray-100/50',
         isOver && 'bg-[#29564F]/10 ring-2 ring-inset ring-[#29564F]/50'
       )}
     >
@@ -253,11 +274,12 @@ function DroppableDayCell({ categoryId, date, isToday: today, children }: Droppa
 // Draggable weekly task card
 interface WeeklyTaskCardProps {
   task: Task;
+  isPeek?: boolean;
   onClick: () => void;
   onStatusCycle: () => void;
 }
 
-function DraggableWeeklyTaskCard({ task, onClick, onStatusCycle }: WeeklyTaskCardProps) {
+function DraggableWeeklyTaskCard({ task, isPeek, onClick, onStatusCycle }: WeeklyTaskCardProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: task.id,
   });
@@ -290,6 +312,7 @@ function DraggableWeeklyTaskCard({ task, onClick, onStatusCycle }: WeeklyTaskCar
         statusColors.bg,
         statusColors.border,
         task.status === 'completed' && 'opacity-60',
+        isPeek && task.status !== 'completed' && 'opacity-50',
         isDragging && 'opacity-50 shadow-lg',
         'hover:shadow-sm'
       )}
